@@ -61,8 +61,8 @@ export default function App() {
   const [loadingModel, setLoadingModel] = useState(true);
   const [error, setError] = useState(null);
 
-  const [userText, setUserText] = useState('');
-  const [expectedText, setExpectedText] = useState('');
+  const [userText, setUserText] = useState('This is the user input that should roughly match the expected text. ');
+  const [expectedText, setExpectedText] = useState('Add your expected text here and press compare to get the similarity.');
   const [userTokens, setUserTokens] = useState(0);
   const [expectedTokens, setExpectedTokens] = useState(0);
   const [loading, setLoading] = useState(false);
