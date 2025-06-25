@@ -201,10 +201,18 @@ export default function App() {
           {userText.trim() && (
             <>
               <h3 className="font-semibold">Python code</h3>
-              <pre className="bg-gray-700 p-2 rounded text-xs font-mono text-blue-200 whitespace-pre-wrap mb-2">
+              <pre className="python-preview bg-gray-700 p-2 rounded text-xs font-mono text-blue-200 whitespace-pre-wrap mb-2">
 {`from transformers import pipeline
+import numpy as np
+
 embed = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2")
-vec1 = embed(user_text)`}
+
+# Embed the user text
+out1 = embed(user_text)         # returns [1][seq_len][384]
+
+# Convert and mean-pool tokens to get the 384-dim vector
+tokens1 = np.array(out1[0])     # shape: (seq_len, 384)
+vec1    = tokens1.mean(axis=0)  # shape: (384,)`}
               </pre>
             </>
           )}
@@ -235,13 +243,24 @@ vec1 = embed(user_text)`}
           {expectedText.trim() && (
             <>
               <h3 className="font-semibold">Python code</h3>
-              <pre className="bg-gray-700 p-2 rounded text-xs font-mono text-blue-200 whitespace-pre-wrap mb-2">
+              <pre className="python-preview bg-gray-700 p-2 rounded text-xs font-mono text-blue-200 whitespace-pre-wrap mb-2">
 {`from transformers import pipeline
-embed = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2")
-vec2 = embed(expected_text)
+emfrom transformers import pipeline
+import numpy as np
 
-from scipy.spatial.distance import cosine
-sim = 1 - cosine(vec1, vec2)`}
+embed = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2")
+
+# Embed expected_text → out is [1][seq_len][384]
+out = embed(expected_text)
+
+# Convert to array and mean-pool across tokens
+tokens = np.array(out[0])      # shape (seq_len, 384)
+vec2   = tokens.mean(axis=0)   # shape (384,)
+
+# Now compute true cosine similarity (higher = more similar)
+sim = np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
+
+print(f"{sim:.4f}")`}
               </pre>
             </>
           )}
