@@ -17,7 +17,7 @@ function averageTokens(tokens2d) {
   return sum.map(v => v / tokens2d.length);
 }
 
-// Extract flat JS array and token count from output
+// Extract flat JS array and token count from pipeline output
 function parseOutput(out) {
   let vec;
   let tokenCount = 0;
@@ -61,8 +61,12 @@ export default function App() {
   const [loadingModel, setLoadingModel] = useState(true);
   const [error, setError] = useState(null);
 
-  const [userText, setUserText] = useState('This is the user input that should roughly match the expected text. ');
-  const [expectedText, setExpectedText] = useState('Add your expected text here and press compare to get the similarity.');
+  const [userText, setUserText] = useState(
+    'This is the user input that should roughly match the expected text. '
+  );
+  const [expectedText, setExpectedText] = useState(
+    'Add your expected text here and press compare to get the similarity.'
+  );
   const [userTokens, setUserTokens] = useState(0);
   const [expectedTokens, setExpectedTokens] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -77,8 +81,6 @@ export default function App() {
       .finally(() => setLoadingModel(false));
   }, []);
 
-
-
   const compareTexts = async () => {
     if (!model) return;
     setLoading(true);
@@ -89,7 +91,8 @@ export default function App() {
 
     try {
       const [out1, out2] = await Promise.all([
-        model(userText), model(expectedText)
+        model(userText),
+        model(expectedText),
       ]);
       const { vec: v1, tokenCount: t1 } = parseOutput(out1);
       const { vec: v2, tokenCount: t2 } = parseOutput(out2);
@@ -110,13 +113,76 @@ export default function App() {
       {/* Promo */}
       <div className="p-4 bg-gray-800 rounded flex items-center space-x-2">
         <span>Check out our Academy & Coaching. 30% Summer Sale at:</span>
-        <a href="https://learndataengineering.com" target="_blank" rel="noopener noreferrer">
-          <img src="LDE-Logo.png" alt="LDE Logo" className="w-[300px] h-auto cursor-pointer" />
+        <a
+          href="https://learndataengineering.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="LDE-Logo.png"
+            alt="LDE Logo"
+            className="w-[300px] h-auto cursor-pointer"
+          />
         </a>
       </div>
+
       {/* Header */}
       <div className="p-4 bg-gray-800 rounded">
         <h1 className="text-3xl font-bold">Embedding Playground</h1>
+      </div>
+
+      {/* Example Buttons */}
+      <div className="p-4 bg-gray-800 rounded">
+        <div className="flex space-x-2">
+          <button
+            onClick={() => {
+              setUserText('Kafka streams sensor data from edge devices');
+              setExpectedText(
+                'Kafka streams sensor data from edge devices'
+              );
+            }}
+            className="px-4 py-2 font-semibold bg-green-500 text-black rounded"
+          >
+            Exact Match
+          </button>
+          <button
+            onClick={() => {
+              setUserText(
+                'Kafka is used to stream sensor data from edge devices'
+              );
+              setExpectedText(
+                'Kafka streams sensor data from edge devices'
+              );
+            }}
+            className="px-4 py-2 font-semibold bg-green-500 text-black rounded"
+          >
+            High Match
+          </button>
+          <button
+            onClick={() => {
+              setUserText('Edge devices send telemetry through Kafka');
+              setExpectedText(
+                'Kafka is used to stream sensor data from edge devices'
+              );
+            }}
+            className="px-4 py-2 font-semibold bg-orange-400 text-black rounded"
+          >
+            Medium Match
+          </button>
+          <button
+            onClick={() => {
+              setUserText(
+                'Logs from IoT devices are streamed via Kafka to our processing layer'
+              );
+              setExpectedText(
+                'Our system ingests telemetry from edge sensors using a distributed event platform'
+              );
+            }}
+            className="px-4 py-2 font-semibold bg-red-500 text-black rounded"
+          >
+            Low Match
+          </button>
+        </div>
       </div>
 
       {/* User Input Section */}
@@ -129,7 +195,9 @@ export default function App() {
             className="w-full bg-gray-700 text-white border border-gray-600 p-3 rounded"
             rows={3}
           />
-          <div className="text-sm text-gray-400">Tokens: {userTokens}</div>
+          <div className="text-sm text-gray-400">
+            Tokens: {userTokens}
+          </div>
           {userText.trim() && (
             <>
               <h3 className="font-semibold">Python code</h3>
@@ -161,7 +229,9 @@ vec1 = embed(user_text)`}
             className="w-full bg-gray-700 text-white border border-gray-600 p-3 rounded"
             rows={3}
           />
-          <div className="text-sm text-gray-400">Tokens: {expectedTokens}</div>
+          <div className="text-sm text-gray-400">
+            Tokens: {expectedTokens}
+          </div>
           {expectedText.trim() && (
             <>
               <h3 className="font-semibold">Python code</h3>
@@ -190,10 +260,19 @@ sim = 1 - cosine(vec1, vec2)`}
       <div className="p-4 bg-gray-800 rounded">
         <button
           onClick={compareTexts}
-          disabled={loadingModel || loading || !userText.trim() || !expectedText.trim()}
+          disabled={
+            loadingModel ||
+            loading ||
+            !userText.trim() ||
+            !expectedText.trim()
+          }
           className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-5 py-2 rounded"
         >
-          {loadingModel ? 'Loading model...' : loading ? 'Comparing...' : 'Compare Similarity'}
+          {loadingModel
+            ? 'Loading model...'
+            : loading
+            ? 'Comparing...'
+            : 'Compare Similarity'}
         </button>
       </div>
 
@@ -209,14 +288,20 @@ sim = 1 - cosine(vec1, vec2)`}
               </div>
             </div>
           </div>
-          {/* Re-added similarity bar */}
           <div className="h-4 bg-gray-700 rounded mb-2">
             <div
-              className={`h-4 rounded ${similarity >= 0.85 ? 'bg-green-500' : similarity >= 0.5 ? 'bg-orange-400' : 'bg-red-500'}`}
+              className={`h-4 rounded ${
+                similarity >= 0.85
+                  ? 'bg-green-500'
+                  : similarity >= 0.5
+                  ? 'bg-orange-400'
+                  : 'bg-red-500'
+              }`}
               style={{ width: `${(similarity * 100).toFixed(1)}%` }}
             />
           </div>
-          <div className="text-sm">{similarity.toFixed(4)}</div>
+          <div className="text-2xl font-bold">{similarity.toFixed(4)}</div>
+
         </div>
       )}
 
