@@ -112,7 +112,7 @@ export default function App() {
     <div className="min-h-screen bg-gray-900 text-white p-6 space-y-6">
       {/* Promo */}
       <div className="p-4 bg-gray-800 rounded flex items-center space-x-2">
-        <span>Check out our Academy & Coaching. 30% Summer Sale at:</span>
+        <span>Check out our Academy & Coaching at:</span>
         <a
           href="https://learndataengineering.com"
           target="_blank"
