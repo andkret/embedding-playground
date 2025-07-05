@@ -110,25 +110,22 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6 space-y-6">
-      {/* Promo */}
-      <div className="p-4 bg-gray-800 rounded flex items-center space-x-2">
-        <span>Check out our Academy & Coaching at:</span>
-        <a
-          href="https://learndataengineering.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            src="LDE-Logo.png"
-            alt="LDE Logo"
-            className="w-[300px] h-auto cursor-pointer"
-          />
-        </a>
-      </div>
-
-      {/* Header */}
-      <div className="p-4 bg-gray-800 rounded">
+      <div className="p-4 bg-gray-800 rounded flex items-center justify-between">
         <h1 className="text-3xl font-bold">Embedding Playground</h1>
+        <div className="flex items-center space-x-2">
+          <span>Check out our Academy & Coaching at:</span>
+          <a
+            href="https://learndataengineering.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="LDE-Logo.png"
+              alt="LDE Logo"
+              className="w-[300px] h-auto cursor-pointer"
+            />
+          </a>
+        </div>
       </div>
 
       {/* Example Buttons */}
