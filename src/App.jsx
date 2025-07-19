@@ -182,6 +182,56 @@ export default function App() {
         </div>
       </div>
 
+      {/* Action */}
+      <div className="p-4 bg-gray-800 rounded">
+        <button
+          onClick={compareTexts}
+          disabled={
+            loadingModel ||
+            loading ||
+            !userText.trim() ||
+            !expectedText.trim()
+          }
+          className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-5 py-2 rounded"
+        >
+          {loadingModel
+            ? 'Loading model...'
+            : loading
+            ? 'Comparing...'
+            : 'Compare Similarity'}
+        </button>
+      </div>
+
+      {/* Result */}
+      {similarity !== null && (
+        <div className="p-4 bg-gray-800 rounded space-y-2">
+          <div className="flex items-center">
+            <span>Similarity:</span>
+            <div className="relative group ml-2 inline-block">
+              <span className="cursor-pointer font-bold">?</span>
+              <div className="absolute left-0 bottom-full mb-1 invisible group-hover:visible bg-gray-700 text-xs text-white p-2 rounded whitespace-nowrap">
+                Good: ≥0.85; OK: 0.5–0.85; Bad: &lt;0.5
+              </div>
+            </div>
+          </div>
+          <div className="h-4 bg-gray-700 rounded mb-2">
+            <div
+              className={`h-4 rounded ${
+                similarity >= 0.85
+                  ? 'bg-green-500'
+                  : similarity >= 0.5
+                  ? 'bg-orange-400'
+                  : 'bg-red-500'
+              }`}
+              style={{ width: `${(similarity * 100).toFixed(1)}%` }}
+            />
+          </div>
+          <div className="text-2xl font-bold">{similarity.toFixed(4)}</div>
+
+        </div>
+      )}
+
+
       {/* User Input Section */}
       <div className="grid grid-cols-4 gap-4">
         <div className="col-span-3 p-4 bg-gray-800 rounded space-y-2">
@@ -272,54 +322,7 @@ print(f"{sim:.4f}")`}
         </div>
       </div>
 
-      {/* Action */}
-      <div className="p-4 bg-gray-800 rounded">
-        <button
-          onClick={compareTexts}
-          disabled={
-            loadingModel ||
-            loading ||
-            !userText.trim() ||
-            !expectedText.trim()
-          }
-          className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-5 py-2 rounded"
-        >
-          {loadingModel
-            ? 'Loading model...'
-            : loading
-            ? 'Comparing...'
-            : 'Compare Similarity'}
-        </button>
-      </div>
-
-      {/* Result */}
-      {similarity !== null && (
-        <div className="p-4 bg-gray-800 rounded space-y-2">
-          <div className="flex items-center">
-            <span>Similarity:</span>
-            <div className="relative group ml-2 inline-block">
-              <span className="cursor-pointer font-bold">?</span>
-              <div className="absolute left-0 bottom-full mb-1 invisible group-hover:visible bg-gray-700 text-xs text-white p-2 rounded whitespace-nowrap">
-                Good: ≥0.85; OK: 0.5–0.85; Bad: &lt;0.5
-              </div>
-            </div>
-          </div>
-          <div className="h-4 bg-gray-700 rounded mb-2">
-            <div
-              className={`h-4 rounded ${
-                similarity >= 0.85
-                  ? 'bg-green-500'
-                  : similarity >= 0.5
-                  ? 'bg-orange-400'
-                  : 'bg-red-500'
-              }`}
-              style={{ width: `${(similarity * 100).toFixed(1)}%` }}
-            />
-          </div>
-          <div className="text-2xl font-bold">{similarity.toFixed(4)}</div>
-
-        </div>
-      )}
+      
 
       {/* Error */}
       {error && (
