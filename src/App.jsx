@@ -56,6 +56,23 @@ function parseOutput(out) {
   return { vec, tokenCount };
 }
 
+// Collapsible code section component
+function CodeExample({ label, children }) {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="mb-2">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex justify-between items-center bg-gray-700 px-3 py-2 rounded text-left font-semibold"
+      >
+        <span>{label}</span>
+        <span className="ml-2">{isOpen ? '▾' : '▸'}</span>
+      </button>
+      {isOpen && <div className="mt-2 bg-gray-800 rounded p-2">{children}</div>}
+    </div>
+  );
+}
+
 export default function App() {
   const [model, setModel] = useState(null);
   const [loadingModel, setLoadingModel] = useState(true);
@@ -227,10 +244,8 @@ export default function App() {
             />
           </div>
           <div className="text-2xl font-bold">{similarity.toFixed(4)}</div>
-
         </div>
       )}
-
 
       {/* User Input Section */}
       <div className="grid grid-cols-4 gap-4">
@@ -246,10 +261,8 @@ export default function App() {
             Tokens: {userTokens}
           </div>
           {userText.trim() && (
-            <>
-              <h3 className="font-semibold">Python code</h3>
-              <pre className="python-preview bg-gray-700 p-2 rounded text-xs font-mono text-blue-200 whitespace-pre-wrap mb-2">
-{`from transformers import pipeline
+            <CodeExample label="Python code">
+              <pre className="python-preview bg-gray-700 p-2 rounded text-xs font-mono text-blue-200 whitespace-pre-wrap mb-0">{`from transformers import pipeline
 import numpy as np
 
 embed = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2")
@@ -259,9 +272,8 @@ out1 = embed(user_text)         # returns [1][seq_len][384]
 
 # Convert and mean-pool tokens to get the 384-dim vector
 tokens1 = np.array(out1[0])     # shape: (seq_len, 384)
-vec1    = tokens1.mean(axis=0)  # shape: (384,)`}
-              </pre>
-            </>
+vec1    = tokens1.mean(axis=0)  # shape: (384,)`}</pre>
+            </CodeExample>
           )}
         </div>
         <div className="col-span-1 p-4 bg-gray-800 rounded">
@@ -284,15 +296,10 @@ vec1    = tokens1.mean(axis=0)  # shape: (384,)`}
             className="w-full bg-gray-700 text-white border border-gray-600 p-3 rounded"
             rows={3}
           />
-          <div className="text-sm text-gray-400">
-            Tokens: {expectedTokens}
-          </div>
+          <div className="text-sm text-gray-400">Tokens: {expectedTokens}</div>
           {expectedText.trim() && (
-            <>
-              <h3 className="font-semibold">Python code</h3>
-              <pre className="python-preview bg-gray-700 p-2 rounded text-xs font-mono text-blue-200 whitespace-pre-wrap mb-2">
-{`from transformers import pipeline
-emfrom transformers import pipeline
+            <CodeExample label="Python code">
+              <pre className="python-preview bg-gray-700 p-2 rounded text-xs font-mono text-blue-200 whitespace-pre-wrap mb-0">{`from transformers import pipeline
 import numpy as np
 
 embed = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2")
@@ -305,29 +312,22 @@ tokens = np.array(out[0])      # shape (seq_len, 384)
 vec2   = tokens.mean(axis=0)   # shape (384,)
 
 # Now compute true cosine similarity (higher = more similar)
-sim = np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
+sim = np.dot(vec1, vec2) / (np.linalg.norm(vec1) * math.norm(vec2))
 
-print(f"{sim:.4f}")`}
-              </pre>
-            </>
+print(f"{sim:.4f}")`}</pre>
+            </CodeExample>
           )}
         </div>
         <div className="col-span-1 p-4 bg-gray-800 rounded">
           <h3 className="font-semibold mb-2">Expected Vector</h3>
           {vec2 && (
-            <div className="max-h-40 overflow-y-auto bg-gray-700 p-2 rounded text-xs font-mono text-green-200 whitespace-pre-wrap">
-              {JSON.stringify(vec2, null, 2)}
-            </div>
+            <div className="max-h-40 overflow-y-auto bg-gray-700 p-2 rounded text-xs font-mono text-green-200 whitespace-pre-wrap">{JSON.stringify(vec2, null, 2)}</div>
           )}
         </div>
       </div>
 
-      
-
       {/* Error */}
-      {error && (
-        <div className="p-4 bg-red-700 rounded text-white">{error}</div>
-      )}
+      {error && <div className="p-4 bg-red-700 rounded text-white">{error}</div>}
     </div>
   );
 }
