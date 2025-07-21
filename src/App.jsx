@@ -127,6 +127,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6 space-y-6">
+      {/* Header */}
       <div className="p-4 bg-gray-800 rounded flex items-center justify-between">
         <h1 className="text-3xl font-bold">Embedding Playground</h1>
         <div className="flex items-center space-x-2">
@@ -151,9 +152,7 @@ export default function App() {
           <button
             onClick={() => {
               setUserText('Kafka streams sensor data from edge devices');
-              setExpectedText(
-                'Kafka streams sensor data from edge devices'
-              );
+              setExpectedText('Kafka streams sensor data from edge devices');
             }}
             className="px-4 py-2 font-semibold bg-green-500 text-black rounded"
           >
@@ -161,12 +160,8 @@ export default function App() {
           </button>
           <button
             onClick={() => {
-              setUserText(
-                'Kafka is used to stream sensor data from edge devices'
-              );
-              setExpectedText(
-                'Kafka streams sensor data from edge devices'
-              );
+              setUserText('Kafka is used to stream sensor data from edge devices');
+              setExpectedText('Kafka streams sensor data from edge devices');
             }}
             className="px-4 py-2 font-semibold bg-green-500 text-black rounded"
           >
@@ -175,9 +170,7 @@ export default function App() {
           <button
             onClick={() => {
               setUserText('Edge devices send telemetry through Kafka');
-              setExpectedText(
-                'Kafka is used to stream sensor data from edge devices'
-              );
+              setExpectedText('Kafka is used to stream sensor data from edge devices');
             }}
             className="px-4 py-2 font-semibold bg-orange-400 text-black rounded"
           >
@@ -185,12 +178,8 @@ export default function App() {
           </button>
           <button
             onClick={() => {
-              setUserText(
-                'Logs from IoT devices are streamed via Kafka to our processing layer'
-              );
-              setExpectedText(
-                'Our system ingests telemetry from edge sensors using a distributed event platform'
-              );
+              setUserText('Logs from IoT devices are streamed via Kafka to our processing layer');
+              setExpectedText('Our system ingests telemetry from edge sensors using a distributed event platform');
             }}
             className="px-4 py-2 font-semibold bg-red-500 text-black rounded"
           >
@@ -199,53 +188,36 @@ export default function App() {
         </div>
       </div>
 
-      {/* Action */}
-      <div className="p-4 bg-gray-800 rounded">
+      {/* Compare & Result */}
+      <div className="p-4 bg-gray-800 rounded flex items-center space-x-6">
         <button
           onClick={compareTexts}
-          disabled={
-            loadingModel ||
-            loading ||
-            !userText.trim() ||
-            !expectedText.trim()
-          }
+          disabled={loadingModel || loading || !userText.trim() || !expectedText.trim()}
           className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-5 py-2 rounded"
         >
-          {loadingModel
-            ? 'Loading model...'
-            : loading
-            ? 'Comparing...'
-            : 'Compare Similarity'}
+          {loadingModel ? 'Loading model...' : loading ? 'Comparing...' : 'Compare Similarity'}
         </button>
-      </div>
-
-      {/* Result */}
-      {similarity !== null && (
-        <div className="p-4 bg-gray-800 rounded space-y-2">
-          <div className="flex items-center">
-            <span>Similarity:</span>
-            <div className="relative group ml-2 inline-block">
-              <span className="cursor-pointer font-bold">?</span>
-              <div className="absolute left-0 bottom-full mb-1 invisible group-hover:visible bg-gray-700 text-xs text-white p-2 rounded whitespace-nowrap">
-                Good: ≥0.85; OK: 0.5–0.85; Bad: &lt;0.5
+        {similarity !== null && (
+          <div className="flex-1 flex items-center justify-between space-x-4">
+            <div className="flex items-center">
+              <span className="font-semibold">Similarity:</span>
+              <div className="relative group ml-2 inline-block">
+                <span className="cursor-pointer font-bold">?</span>
+                <div className="absolute left-0 bottom-full mb-1 invisible group-hover:visible bg-gray-700 text-xs text-white p-2 rounded whitespace-nowrap">
+                  Good: ≥0.85; OK: 0.5–0.85; Bad: &lt;0.5
+                </div>
               </div>
+              <span className="ml-2 text-2xl font-bold">{similarity.toFixed(4)}</span>
+            </div>
+            <div className="flex-1 h-4 bg-gray-700 rounded overflow-hidden">
+              <div
+                className={`h-4 rounded ${similarity >= 0.85 ? 'bg-green-500' : similarity >= 0.5 ? 'bg-orange-400' : 'bg-red-500'}`}
+                style={{ width: `${(similarity * 100).toFixed(1)}%` }}
+              />
             </div>
           </div>
-          <div className="h-4 bg-gray-700 rounded mb-2">
-            <div
-              className={`h-4 rounded ${
-                similarity >= 0.85
-                  ? 'bg-green-500'
-                  : similarity >= 0.5
-                  ? 'bg-orange-400'
-                  : 'bg-red-500'
-              }`}
-              style={{ width: `${(similarity * 100).toFixed(1)}%` }}
-            />
-          </div>
-          <div className="text-2xl font-bold">{similarity.toFixed(4)}</div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* User Input Section */}
       <div className="grid grid-cols-4 gap-4">
@@ -257,12 +229,11 @@ export default function App() {
             className="w-full bg-gray-700 text-white border border-gray-600 p-3 rounded"
             rows={3}
           />
-          <div className="text-sm text-gray-400">
-            Tokens: {userTokens}
-          </div>
+          <div className="text-sm text-gray-400">Tokens: {userTokens}</div>
           {userText.trim() && (
             <CodeExample label="Python code">
-              <pre className="python-preview bg-gray-700 p-2 rounded text-xs font-mono text-blue-200 whitespace-pre-wrap mb-0">{`from transformers import pipeline
+              <pre className="python-preview bg-gray-700 p-2 rounded text-xs font-mono text-blue-200 whitespace-pre-wrap mb-0">
+{`from transformers import pipeline
 import numpy as np
 
 embed = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2")
@@ -272,17 +243,14 @@ out1 = embed(user_text)         # returns [1][seq_len][384]
 
 # Convert and mean-pool tokens to get the 384-dim vector
 tokens1 = np.array(out1[0])     # shape: (seq_len, 384)
-vec1    = tokens1.mean(axis=0)  # shape: (384,)`}</pre>
+vec1    = tokens1.mean(axis=0)  # shape: (384,)`}
+              </pre>
             </CodeExample>
           )}
         </div>
         <div className="col-span-1 p-4 bg-gray-800 rounded">
           <h3 className="font-semibold mb-2">Input Vector</h3>
-          {vec1 && (
-            <div className="max-h-40 overflow-y-auto bg-gray-700 p-2 rounded text-xs font-mono text-green-200 whitespace-pre-wrap">
-              {JSON.stringify(vec1, null, 2)}
-            </div>
-          )}
+          {vec1 && <div className="max-h-40 overflow-y-auto bg-gray-700 p-2 rounded text-xs font-mono text-green-200 whitespace-pre-wrap">{JSON.stringify(vec1, null, 2)}</div>}
         </div>
       </div>
 
@@ -299,7 +267,8 @@ vec1    = tokens1.mean(axis=0)  # shape: (384,)`}</pre>
           <div className="text-sm text-gray-400">Tokens: {expectedTokens}</div>
           {expectedText.trim() && (
             <CodeExample label="Python code">
-              <pre className="python-preview bg-gray-700 p-2 rounded text-xs font-mono text-blue-200 whitespace-pre-wrap mb-0">{`from transformers import pipeline
+              <pre className="python-preview bg-gray-700 p-2 rounded text-xs font-mono text-blue-200 whitespace-pre-wrap mb-0">
+{`from transformers import pipeline
 import numpy as np
 
 embed = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2")
@@ -308,21 +277,20 @@ embed = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2")
 out = embed(expected_text)
 
 # Convert to array and mean-pool across tokens
-tokens = np.array(out[0])      # shape (seq_len, 384)
-vec2   = tokens.mean(axis=0)   # shape (384,)
+tokens = np.array(out[0])      // shape (seq_len, 384)
+vec2   = tokens.mean(axis=0)   // shape (384,)
 
-# Now compute true cosine similarity (higher = more similar)
-sim = np.dot(vec1, vec2) / (np.linalg.norm(vec1) * math.norm(vec2))
+// Now compute cosine similarity
+sim = cosineSimilarity(vec1, vec2)
 
-print(f"{sim:.4f}")`}</pre>
+print(sim)`}
+              </pre>
             </CodeExample>
           )}
         </div>
         <div className="col-span-1 p-4 bg-gray-800 rounded">
           <h3 className="font-semibold mb-2">Expected Vector</h3>
-          {vec2 && (
-            <div className="max-h-40 overflow-y-auto bg-gray-700 p-2 rounded text-xs font-mono text-green-200 whitespace-pre-wrap">{JSON.stringify(vec2, null, 2)}</div>
-          )}
+          {vec2 && <div className="max-h-40 overflow-y-auto bg-gray-700 p-2 rounded text-xs font-mono text-green-200 whitespace-pre-wrap">{JSON.stringify(vec2, null, 2)}</div>}
         </div>
       </div>
 
